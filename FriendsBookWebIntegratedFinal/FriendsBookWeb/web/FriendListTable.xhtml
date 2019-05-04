@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"    
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title></title>
+    </h:head>
+   <h:body style="padding-top: 50px; padding-bottom: 20px; height: 100%; background-color: #ecf0f1;">
+      <b:navBar brand="FriendsBook" brand-style="color: white; padding-left: 25px"  style="background-color: #3b5998; margin-bottom: 10px; height: 50px; width: 100vw" brandHref="home_page.xhtml"  inverse="false"  fixed="top">
+          <b:column col-md="6" style="padding-top: 10px;" offset-md="1">
+              <h:form style="padding-left: 55px">
+                   <b:inputText value="#{user.user_search}" style="height: 34px">
+                       <f:facet name="append">
+                           <b:commandButton icon="glyphicon glyphicon-search" icon-size="sm" action="user_search"/>
+                       </f:facet>
+                   </b:inputText>
+            </h:form>
+          </b:column>
+          <b:column col-md="3" style="padding-top: 10px;" offset-md="0">
+              <h:form style="padding-top: 5px;">
+                       <b:link icon="glyphicon glyphicon-globe" icon-size="xs" outcome="viewNotification" style="margin-left: 10px;color: white">
+                                <span><b:badge value="#{friendsBook.newNotificationCount}" style="color: red"></b:badge></span>
+                       </b:link>
+                  <b:commandLink icon="glyphicon glyphicon-envelope" icon-size="xs" action="#{friendsBook.redirectToMessages()}" style="margin-left: 10px; color: white">
+                         <span><b:badge value="#{friendsBook.newMessageCount}" style="color: red"></b:badge></span>
+                      </b:commandLink>
+                  <b:navbarLinks pull="right"  style="padding-top: 0">
+                     <b:dropMenu  value="" iconAwesome="bars" style="padding-top:0px; padding-bottom: 10px; color: white" >
+                     <b:navLink value="Update Profile" href="updateprofile.xhtml"></b:navLink>
+                     <b:navCommandLink value="See Friends" action="#{friendsBook.FriendList()}" />
+                     <b:navCommandLink value="Log Out" action="#{friendsBook.logout()}" />
+                     </b:dropMenu>
+                  </b:navbarLinks>
+                  </h:form>
+          </b:column>
+            
+</b:navBar>
+          <b:container style="margin-top: 10px;">
+              <b:column col-md="3">
+                  <b:panel style="height: 60vh;">
+                    <h:graphicImage url="/image?id=#{friendsBook.account.acctID}" width="100px" height="100px" style="border-radius: 100px; margin-left: 25%"  />
+                    <h3 style="margin-top: 5px; margin-left: 10%">#{friendsBook.account.name}</h3>
+                    <hr></hr>
+                    <h4>Date of Birth:</h4>
+                    <p>#{friendsBook.account.dob}</p>
+                    <hr></hr>
+                    <h4>School:</h4>
+                    <p>#{friendsBook.account.school}</p>
+                </b:panel>
+              </b:column>
+              
+              <b:column col-md="5">
+                <ui:repeat value="#{friendsBook.friends}" var = "friend">
+               <b:column>
+                    <b:row>
+                        <b:panel collapsible="false" style="margin-left: 10px;">
+                            <b:column col-md="5">
+                                <h:outputText style="font-size: 25px" value="#{friend}" /> <br></br>
+                            </b:column>
+                            <b:column col-md="5" offset="2">
+                                <b:row style="padding-right: 100px" >
+                                    <h:form >
+                                        <b:commandButton class="btn btn-primary btn-md"   value="View Profile" tooltipPosition="auto" action="#{friendsBook.FriendsProfile(friend)}">
+                                        </b:commandButton>
+                                        </h:form>
+                                </b:row>
+                            </b:column>
+                        </b:panel>
+                    </b:row>
+                </b:column>
+                </ui:repeat>
+            </b:column>
+        </b:container>
+           
+           
+    </h:body>
+</html>
+

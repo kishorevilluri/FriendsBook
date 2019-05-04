@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui">
+    <h:head>
+        <title>Update Profile</title>
+    </h:head>
+    
+  <h:body style="padding-top: 50px; padding-bottom: 20px; height: 100%">
+      <b:navBar brand="FriendsBook" brand-style="color: white; padding-left: 25px"  style="background-color: #3b5998; margin-bottom: 10px; height: 50px; width: 100vw" brandHref="home_page.xhtml"  inverse="false"  fixed="top">
+          <b:column col-md="6" style="padding-top: 10px;" offset-md="1">
+              <h:form style="padding-left: 55px">
+                   <b:inputText value="#{user.user_search}" style="height: 34px">
+                       <f:facet name="append">
+                           <b:commandButton icon="glyphicon glyphicon-search" icon-size="sm" action="user_search"/>
+                       </f:facet>
+                   </b:inputText>
+            </h:form>
+          </b:column>
+          <b:column col-md="3" style="padding-top: 10px;" offset-md="0">
+              <h:form style="padding-top: 5px;">
+                       <b:link icon="glyphicon glyphicon-globe" icon-size="xs" outcome="viewNotification" style="margin-left: 10px;color: white">
+                                <span><b:badge value="#{friendsBook.newNotificationCount}" style="color: red"></b:badge></span>
+                       </b:link>
+                  <b:commandLink icon="glyphicon glyphicon-envelope" icon-size="xs" action="#{friendsBook.redirectToMessages()}" style="margin-left: 10px; color: white">
+                         <span><b:badge value="#{friendsBook.newMessageCount}" style="color: red"></b:badge></span>
+                      </b:commandLink>
+                  <b:navbarLinks pull="right"  style="padding-top: 0">
+                     <b:dropMenu  value="" iconAwesome="bars" style="padding-top:0px; padding-bottom: 10px; color: white" >
+                     <b:navLink value="Update Profile" href="updateprofile.xhtml"></b:navLink>
+                     <b:navCommandLink value="See Friends" action="#{friendsBook.FriendList()}" />
+                     <b:navCommandLink value="Log Out" action="#{friendsBook.logout()}" />
+                     </b:dropMenu>
+                  </b:navbarLinks>
+                  </h:form>
+          </b:column>
+            
+</b:navBar>
+   
+      <b:container style="margin-top: 10px">
+            <h:form>
+                <h3>Update Profile</h3>
+
+                <b:form horizontal="true">
+                    <br></br>
+                    <b:inputText  style="height:35px" placeholder="Username"  value="#{friendsBook.account.name}" label="Username" colMd="6" labelColMd="2">
+                        <f:facet name="prepend">
+                            <b:icon name="user" />
+                        </f:facet>
+                    </b:inputText>
+                    <br></br>
+                    <br></br>
+                    <b:inputText  style="height:35px" placeholder="Password" label="Password" value="#{friendsBook.account.password}" colMd="6" labelColMd="2">
+                        <f:facet name="prepend">
+                            <b:iconAwesome name="key" />
+                        </f:facet>
+                    </b:inputText>
+                    <br></br><br></br>
+                    <b:inputText style="height:35px" placeholder="Education" label="Education" value="#{friendsBook.account.school}" colMd="6" labelColMd="2">
+                        <f:facet name="prepend">
+                            <b:iconAwesome name="key" class="fa fa-graduation-cap"  />
+                        </f:facet>
+                    </b:inputText>
+                    <br></br><br></br>
+
+
+
+                    <b:datepicker  label="Date Of Birth"  mode="icon-popup" style="height:35px" placeholder="Date Of Birth"
+                                   id="dob" value="#{friendsBook.account.dob}"  colMd="6" labelColMd="2"
+                                  
+                                   > 
+
+                    </b:datepicker>
+
+
+
+
+                    <br></br><br></br>
+                    <b:selectOneMenu style="height:35px"  label="Gender" value="#{friendsBook.account.gender}"  colMd="6" labelColMd="2">
+                        <f:selectItem itemLabel="Male" itemValue="2" />
+                        <f:selectItem itemLabel="Female" itemValue="1" />
+                        <f:selectItem itemLabel="Others" itemValue="3" />
+                        <f:facet name="prepend" >
+                            <b:iconAwesome name="key"  class="fa fa-user-secret"/>
+                        </f:facet>
+                    </b:selectOneMenu>
+                    <br></br><br></br>
+                    <div style=" padding-left: 205px" >
+                        <b:commandButton  style=" background-color: #3b5998; color: white; height:35px" value="Update"  ajax="true" action="#{friendsBook.UpdateProfile()}" iconAwesome="fa fa-address-card" />
+                    </div>
+                </b:form>  
+            </h:form>
+          
+        <h:form enctype="multipart/form-data">
+         
+            <p:messages showDetail="true" />
+
+            <p:fileUpload value="#{user.file}" mode="simple" />
+
+            <p:commandButton value="Submit" ajax="false" actionListener="#{userDaoImpl.storeImage(user, friendsBook.account.acctID)}" />
+
+        </h:form>
+        </b:container>
+    </h:body>
+</html>
+

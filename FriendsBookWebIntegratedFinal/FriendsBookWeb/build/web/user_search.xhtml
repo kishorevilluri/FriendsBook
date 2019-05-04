@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"    
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Home Page</title>
+       
+    </h:head>
+    
+    <h:body style="padding-top: 50px; padding-bottom: 20px; height: 100%">
+      <b:navBar brand="FriendsBook" brand-style="color: white; padding-left: 25px"  style="background-color: #3b5998; margin-bottom: 10px; height: 50px; width: 100vw" brandHref="home_page.xhtml"  inverse="false"  fixed="top">
+          <b:column col-md="6" style="padding-top: 10px;" offset-md="1">
+              <h:form style="padding-left: 55px">
+                   <b:inputText value="#{user.user_search}" style="height: 34px">
+                       <f:facet name="append">
+                           <b:commandButton icon="glyphicon glyphicon-search" icon-size="sm" action="user_search"/>
+                       </f:facet>
+                   </b:inputText>
+            </h:form>
+          </b:column>
+          <b:column col-md="3" style="padding-top: 10px;" offset-md="0">
+              <h:form style="padding-top: 5px;">
+                       <b:link icon="glyphicon glyphicon-globe" icon-size="xs" outcome="viewNotification" style="margin-left: 10px;color: white">
+                                <span><b:badge value="#{friendsBook.newNotificationCount}" style="color: red"></b:badge></span>
+                       </b:link>
+                  <b:commandLink icon="glyphicon glyphicon-envelope" icon-size="xs" action="#{friendsBook.redirectToMessages()}" style="margin-left: 10px; color: white">
+                         <span><b:badge value="#{friendsBook.newMessageCount}" style="color: red"></b:badge></span>
+                      </b:commandLink>
+                  <b:navbarLinks pull="right"  style="padding-top: 0">
+                     <b:dropMenu  value="" iconAwesome="bars" style="padding-top:0px; padding-bottom: 10px; color: white" >
+                     <b:navLink value="Update Profile" href="updateprofile.xhtml"></b:navLink>
+                     <b:navCommandLink value="See Friends" action="#{friendsBook.FriendList()}" />
+                     <b:navCommandLink value="Log Out" action="#{friendsBook.logout()}" />
+                     </b:dropMenu>
+                  </b:navbarLinks>
+                  </h:form>
+          </b:column>
+            
+</b:navBar>
+   
+        <b:container style="margin-top: 10px;">
+            <b:panel col-md="3" style="height: 60vh;">
+                    <h:graphicImage url="/image?id=#{friendsBook.account.acctID}" width="100px" height="100px" style="border-radius: 100px; margin-left: 25%"  />
+                    <h3 style="margin-top: 5px; margin-left: 10%">#{friendsBook.account.name}</h3>
+                    <hr></hr>
+                    <h4>Date of Birth:</h4>
+                    <p>#{friendsBook.account.dob}</p>
+                    <hr></hr>
+                    <h4>School:</h4>
+                    <p>#{friendsBook.account.school}</p>
+            </b:panel>
+            <b:column col-md="5" style="margin-left: 10px">
+                <ui:repeat value="#{userDaoImpl.searchUser(user.user_search)}" var = "search">
+                <!--<b:column>-->
+                    <b:row>
+                        <b:panel collapsible="false">
+                            <b:column col-md="4">
+                                <h:outputText style="font-size: 25px" value="#{search.name}" /> <br></br>
+                                <h:graphicImage url="/image?id=#{search.id}" style="width: 90%; height: 85%" />
+                            </b:column>
+                            <b:column col-md="8">
+                                <b:row>
+                                    <h:form>
+                                        <b:commandButton class="btn btn-primary btn-md" rendered="#{userDaoImpl.isNotFriend(friendsBook.account.acctID, search.id)}" value="Friend Request" tooltipPosition="auto" action="#{userDaoImpl.sendFriendRequest(friendsBook.account.acctID ,search.id)}">
+                                            <f:ajax execute="@form" render="@form" />
+                                        </b:commandButton>
+                                        <b:commandButton class="btn btn-md" rendered="#{userDaoImpl.pendingRequest(friendsBook.account.acctID, search.id)}" look="warning" value="Request Pending" tooltip="Cancel Friend Request?" tooltipPosition="auto" action="#{userDaoImpl.deleteRequest(friendsBook.account.acctID, search.id)}">
+                                            <f:ajax execute="@form" render="@form" />
+                                        </b:commandButton>
+                                        <b:commandButton class="btn btn-md" disabled="true" rendered="#{userDaoImpl.isFriend(friendsBook.account.acctID, search.id)}" value="Friend!" style="color:#3498db" /> 
+                                        <b:inputText style="margin-top: 10px" value="#{message.content}" placeholder="Type your message here..." />
+                                        <b:commandButton value="Send" class="btn btn-primary" action="#{messageDao.sendMessage(message.content, friendsBook.account.acctID, search.id)}" />
+                                    </h:form>
+                                </b:row>
+                            </b:column>
+                        </b:panel>
+                    </b:row>
+                <!--</b:column>-->
+                </ui:repeat>
+            </b:column>
+        </b:container>
+    </h:body>
+</html>

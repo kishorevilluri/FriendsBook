@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"    
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Home Page</title>
+    </h:head>
+    
+    <h:body style="padding-top: 50px; padding-bottom: 20px; height: 100%; background-color: #ecf0f1;">
+      <b:navBar brand="FriendsBook" brand-style="color: white; padding-left: 25px"  style="background-color: #3b5998; margin-bottom: 10px; height: 50px; width: 100vw" brandHref="home_page.xhtml"  inverse="false"  fixed="top">
+          <b:column col-md="6" style="padding-top: 10px;" offset-md="1">
+              <h:form style="padding-left: 55px">
+                   <b:inputText value="#{user.user_search}" style="height: 34px">
+                       <f:facet name="append">
+                           <b:commandButton icon="glyphicon glyphicon-search" icon-size="sm" action="user_search"/>
+                       </f:facet>
+                   </b:inputText>
+            </h:form>
+          </b:column>
+          <b:column col-md="3" style="padding-top: 10px;" offset-md="0">
+              <h:form style="padding-top: 5px;">
+                       <b:link icon="glyphicon glyphicon-globe" icon-size="xs" outcome="viewNotification" style="margin-left: 10px;color: white">
+                                <span><b:badge value="#{friendsBook.newNotificationCount}" style="color: red"></b:badge></span>
+                       </b:link>
+                  <b:commandLink icon="glyphicon glyphicon-envelope" icon-size="xs" action="#{friendsBook.redirectToMessages()}" style="margin-left: 10px; color: white">
+                         <span><b:badge value="#{friendsBook.newMessageCount}" style="color: red"></b:badge></span>
+                      </b:commandLink>
+                  <b:navbarLinks pull="right"  style="padding-top: 0">
+                     <b:dropMenu  value="" iconAwesome="bars" style="padding-top:0px; padding-bottom: 10px; color: white" >
+                     <b:navLink value="Update Profile" href="updateprofile.xhtml"></b:navLink>
+                     <b:navCommandLink value="See Friends" action="#{friendsBook.FriendList()}" />
+                     <b:navCommandLink value="Log Out" action="#{friendsBook.logout()}" />
+                     </b:dropMenu>
+                  </b:navbarLinks>
+                  </h:form>
+          </b:column>
+            
+</b:navBar>
+        <b:container style="margin-top: 30px;">
+            <!--<b:column col-md="3" style="height: 25vh; border-style: solid; border-width: thin; background-color: white">-->
+                <b:panel col-md="3" style="height: 60vh;">
+                    <h:graphicImage url="/image?id=#{friendsBook.account.acctID}" width="100px" height="100px" style="border-radius: 100px; margin-left: 25%"  />
+                    <h3 style="margin-top: 5px; margin-left: 10%">#{friendsBook.account.name}</h3>
+                    <hr></hr>
+                    <h4>Date of Birth:</h4>
+                    <p>#{friendsBook.account.dob}</p>
+                    <hr></hr>
+                    <h4>School:</h4>
+                    <p>#{friendsBook.account.school}</p>
+                </b:panel>
+                
+            <!--</b:column>-->
+            
+            <b:column col-md="5" style="margin-left: 5px">
+                <ui:repeat value="#{postDao.topPosts}" var="post" id="userPost">
+                    <b:row>
+                        <b:panel title="#{post.user_id}" collapsible="false">
+                            <h:outputText value="#{post.content}" />
+                            <hr></hr>
+                            <h:panelGroup id="friendsPosts">
+                                <b:panel title="Comments" look="primary" collapsed="true">
+                                    <ui:repeat value="#{post.comment}" var="com">
+                                        <b:panel>
+                                            <h:graphicImage url="/image?id=#{com.userId}" height="30px" width="30px" style="border-radius: 100px" />
+                                            <h:outputText style="font-weight: 10px; color: #1B9CFC; margin-right: 4px" value="#{com.userId}:"/>
+                                            <h:outputText value="#{com.comment}" />
+                                        </b:panel>
+                                    </ui:repeat>
+                                    <h:form>
+                                        <b:inputText fieldSize="sm" value="#{comment.comment}" required="true" placeholder="Enter your comment..."></b:inputText>
+                                        <b:commandButton value="Enter" look="primary" size="xs" action="#{comment.emptyComment()}">
+                                            <f:ajax execute="@form" render=":userPost:friendsPosts" listener="#{commentDao.saveComment(comment, friendsBook.account.acctID, post.post_id)}" />
+                                        </b:commandButton>
+                                    </h:form>   
+                                </b:panel>
+                            </h:panelGroup>
+                        </b:panel>
+                    </b:row>
+                </ui:repeat>
+            </b:column>
+            
+            <!--<b:column col-md="2" offset="1" style="height: 25vh; border-style: solid; border-width: thin; background-color: white">-->
+                <b:panel col-md="3" style="height: 25vh; margin-left: 5px">
+                <h3 style="margin-top: 5px">HashTags</h3>
+                <h:form>
+                    <ui:repeat value="#{postDao.retrieveHashTags()}" var="hashTag">
+                        <b:row style="margin-left: 10px">
+                            <b:commandLink value="#{hashTag}" action="#{postDao.retrieveTopHashTagPosts(hashTag)}"/>
+                        </b:row>
+                    </ui:repeat>
+                </h:form>
+                </b:panel> 
+            <!--</b:column>-->
+        </b:container>
+    </h:body>
+</html>

@@ -1,0 +1,137 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      >
+    <h:head>
+        <title>FriendsBook</title>
+
+    </h:head>
+
+    <h:body style="padding-top: 50px; padding-bottom: 20px;">
+        <b:navBar brand="FriendsBook" brand-style="color: white; padding-left: 25px"  style="background-color: #3b5998; margin-bottom: 10px; height: 50px; width: 100vw" brandHref="home_page.xhtml"  inverse="false"  fixed="top">
+            <b:column col-md="25">
+                <h:form styleClass="navbar-form navbar-right" id="loginForm">
+                    <div class="form-group">
+                        <b:inputText placeholder="AccountID" fieldSize="sm"
+                                     id="acctID" value="#{friendsBook.account.acctID}"
+                                     required="true"  required-message="AccountID: Value Required" />
+
+                        <!--input type="text" class="form-control" placeholder="Search"/-->
+                    </div>
+                    <div class="form-group">
+                        <b:inputSecret placeholder="Password" fieldSize="sm"
+                                       id="password" value="#{friendsBook.account.password}"
+                                       required="true" required-message="Password: Value Required" />
+                    </div> 
+                       
+                    <b:commandButton action="#{friendsBook.login()}" value="Sign in" look="success" icon="chevron-right" iconAlign="right" />
+                   <b:growl for="loginRef" id="loginRef" placementFrom="top" show-detail="true"
+                             global-only="false"
+                             show-summary="true" allow-dismiss="true"
+                             animation-enter="animated bounceInDown"
+                             animation-exit="animated flipOutX"
+                             escape="true" />
+                </h:form>
+                
+            </b:column>
+        </b:navBar>
+        <b:jumbotron>
+            <b:container>
+                <h:body>
+                    <h:form styleClass="navbar-form navbar-left">
+                        <h:graphicImage  style="height : 500px; width: 500px" value="images/fb1st.png" />
+                    </h:form>
+                    <h:form styleClass="navbar-form navbar-right">
+
+                        <h2><b>Create a New Account</b></h2>
+                        <table>
+                            <tr>
+
+                                <td>
+                                    <b:inputText style="height:50px; width: 300px" placeholder="AccountID"
+                                                 id="acctID" value="#{friendsBook.account.acctID}"
+                                                 required="true" required-message="Account ID: Value Required, Range: 3-10, must Contain any one of them: # * ? ! "
+                                              />
+
+                                </td>
+                            </tr>
+                            
+                            <tr>
+
+                                <td>
+                                    <b:inputSecret style="height:50px; width: 300px" placeholder="Password"
+                                                   id="password" value="#{friendsBook.account.password}"
+                                                   required="true" required-message="Password: Value Required, Range: 8-16, Must Not same as AccountID"
+                                                   />
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <div class="form-group">
+
+                                    <td>
+                                        <b:inputText style="height:50px; width: 300px" placeholder="Your Name"
+                                                     id="name" value="#{friendsBook.account.name}"
+                                                     required="true"  required-message="Name : Value Required"/>
+
+                                    </td></div>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b:selectOneMenu style="height:35px; width: 300px" 
+                                                     id="gender"  value="#{friendsBook.account.gender}">
+                                        <f:selectItem itemLabel="Male" itemValue="2" />
+                                        <f:selectItem itemLabel="Female" itemValue="1" />
+                                        <f:selectItem itemLabel="Other" itemValue="3" />
+                                        
+                                    </b:selectOneMenu>
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td>
+                                    <b:dateTimePicker mode="popup-icon" style="height:0px; width: 300px" placeholder="Date Of Birth" show-button-panel="true" show-time="false"
+                                                      format="MM/DD/YYYY" id="dob" value="#{friendsBook.account.dob}" required="true" required-message="Date Of Birth: Value Required"
+                                                  >
+
+                                    </b:dateTimePicker>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <div class="form-group">
+
+                                    <td>
+                                        <b:inputText style="height:50px; width: 300px" placeholder="School"
+                                                     id="school" value="#{friendsBook.account.school}"
+                                                     required="true" required-message="School: Value Required"/>
+
+                                    </td>
+                                </div>
+                            </tr>
+                           
+                        </table>
+                        <p><h5>By creating an account you agree to our<a href="#"> Terms And Privacy</a>.</h5></p>
+
+                        <p><h:messages /></p>
+                        <p><b:commandButton  action="#{friendsBook.register()}" value="Sign up" look="success"  iconAlign="right" icon="chevron-right" /></p>
+                        
+                        
+                    </h:form>
+                    
+                    
+                </h:body>
+                 
+            </b:container>
+            <br></br><br></br> <br> </br>      
+                            
+                    <div class="footer-copyright text-center py-3">© 2019 Copyright:
+                    <a href="https://mdbootstrap.com/education/bootstrap/"> ISAM 5638.01 FriendsBookWeb</a>
+                </div>   
+        </b:jumbotron>
+       
+    </h:body>
+</html>

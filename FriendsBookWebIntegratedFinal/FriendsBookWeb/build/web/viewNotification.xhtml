@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>FriendsBook</title>
+
+    </h:head>
+<h:body style="padding-top: 50px; padding-bottom: 20px; height: 100%">
+      <b:navBar brand="FriendsBook" brand-style="color: white; padding-left: 25px"  style="background-color: #3b5998; margin-bottom: 10px; height: 50px; width: 100vw" brandHref="home_page.xhtml"  inverse="false"  fixed="top">
+          <b:column col-md="6" style="padding-top: 10px;" offset-md="1">
+              <h:form style="padding-left: 55px">
+                   <b:inputText value="#{user.user_search}" style="height: 34px">
+                       <f:facet name="append">
+                           <b:commandButton icon="glyphicon glyphicon-search" icon-size="sm" action="user_search"/>
+                       </f:facet>
+                   </b:inputText>
+            </h:form>
+          </b:column>
+          <b:column col-md="3" style="padding-top: 10px;" offset-md="0">
+              <h:form style="padding-top: 5px;">
+                       <b:link icon="glyphicon glyphicon-globe" icon-size="xs" outcome="viewNotification" style="margin-left: 10px;color: white">
+                                <span><b:badge value="#{friendsBook.newNotificationCount}" style="color: red"></b:badge></span>
+                       </b:link>
+                  <b:commandLink icon="glyphicon glyphicon-envelope" icon-size="xs" action="#{friendsBook.redirectToMessages()}" style="margin-left: 10px; color: white">
+                         <span><b:badge value="#{friendsBook.newMessageCount}" style="color: red"></b:badge></span>
+                      </b:commandLink>
+                  <b:navbarLinks pull="right"  style="padding-top: 0">
+                     <b:dropMenu  value="" iconAwesome="bars" style="padding-top:0px; padding-bottom: 10px; color: white" >
+                     <b:navLink value="Update Profile" href="updateprofile.xhtml"></b:navLink>
+                     <b:navCommandLink value="See Friends" action="#{friendsBook.FriendList()}" />
+                     <b:navCommandLink value="Log Out" action="#{friendsBook.logout()}" />
+                     </b:dropMenu>
+                  </b:navbarLinks>
+                  </h:form>
+          </b:column>
+            
+</b:navBar> 
+        <b:jumbotron>
+            <b:container>
+           <b:form>
+                <b:column>
+                    <ui:repeat value="#{friendsBook.notifications}" var="noti" id="notiui">
+
+                        <b:row>
+
+
+                            <ui:fragment rendered="#{noti.type == 1}">
+
+                                <b:link outcome="#{friendsBook.viewMessage(noti.sender)}">
+                                    <b:panel  title="#{noti.sender} sent a message" col-md="8" collapsible="false" style="margin-left: 10px;">
+                                        
+                                             
+                                        <h:outputText value="#{noti.content}" />
+                                        <div class="input-group">
+                                        <b:inputText placeholder="Reply" fieldSize="sm"
+                                                     id="content2" binding="#{qR}"/>
+                                        <span class="input-group-btn">
+                                            <b:commandButton action="#{friendsBook.notificationSendMessage(noti.sender,qR.value)}" value="Send" look="primary" icon="glyphicon glyphicon-send" style="height: 20 px ; margin-left: 10px;"/>
+                                        </span>
+                                        </div>
+                                    </b:panel>
+                                </b:link>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{noti.type == 0}">
+                                <b:link >
+                                    <b:panel  title="#{noti.sender} wants to be your friend." col-md="8" collapsible="false" style="margin-left: 10px;">
+                                          <span class="btn-group">
+                                           
+                                              <b:commandButton  value="Accept"  action="#{friendsBook.acceptFriendRequest(noti.sender,noti.notiID)}" look="primary" icon="glyphicon glyphicon-ok" style="height: 20 px ; margin-left: 10px;"/>
+                                              <b:commandButton  value="Ignore" action="#{friendsBook.ignoreFriendRequest(noti.notiID)}" look="primary" icon="glyphicon glyphicon-remove" style="height: 20 px ; margin-left: 40px;"/>
+                                      
+                                          </span> 
+                                        
+                                    </b:panel>
+                                </b:link>
+                            </ui:fragment>
+                        </b:row>
+                    </ui:repeat>
+                </b:column>
+            </b:form>
+            </b:container>
+        </b:jumbotron>
+    </h:body>
+</html>

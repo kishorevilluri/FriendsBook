@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+          
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Home Page</title>
+        <script>
+        function goToBottom(){
+            var el = document.getElementById('chat');
+            el.scrollTop = el.scrollHeight;
+        }
+        </script>
+    </h:head>
+     <h:body style="padding-top: 50px; padding-bottom: 20px; height: 100%">
+      <b:navBar brand="FriendsBook" brand-style="color: white; padding-left: 25px"  style="background-color: #3b5998; margin-bottom: 10px; height: 50px; width: 100vw" brandHref="home_page.xhtml"  inverse="false"  fixed="top">
+          <b:column col-md="6" style="padding-top: 10px;" offset-md="1">
+              <h:form style="padding-left: 55px">
+                   <b:inputText value="#{user.user_search}" style="height: 34px">
+                       <f:facet name="append">
+                           <b:commandButton icon="glyphicon glyphicon-search" icon-size="sm" action="user_search"/>
+                       </f:facet>
+                   </b:inputText>
+            </h:form>
+          </b:column>
+          <b:column col-md="3" style="padding-top: 10px;" offset-md="0">
+              <h:form style="padding-top: 5px;">
+                       <b:link icon="glyphicon glyphicon-globe" icon-size="xs" outcome="viewNotification" style="margin-left: 10px;color: white">
+                                <span><b:badge value="#{friendsBook.newNotificationCount}" style="color: red"></b:badge></span>
+                       </b:link>
+                  <b:commandLink icon="glyphicon glyphicon-envelope" icon-size="xs" action="#{friendsBook.redirectToMessages()}" style="margin-left: 10px; color: white">
+                         <span><b:badge value="#{friendsBook.newMessageCount}" style="color: red"></b:badge></span>
+                      </b:commandLink>
+                  <b:navbarLinks pull="right"  style="padding-top: 0">
+                     <b:dropMenu  value="" iconAwesome="bars" style="padding-top:0px; padding-bottom: 10px; color: white" >
+                     <b:navLink value="Update Profile" href="updateprofile.xhtml"></b:navLink>
+                     <b:navCommandLink value="See Friends" action="#{friendsBook.FriendList()}" />
+                     <b:navCommandLink value="Log Out" action="#{friendsBook.logout()}" />
+                     </b:dropMenu>
+                  </b:navbarLinks>
+                  </h:form>
+          </b:column>
+            
+</b:navBar>
+        
+        <b:container style="margin-top: 10px">
+            <b:column col-md="3">
+                <h:form>
+                    <ui:repeat value="#{messageDao.retrieveSenders(friendsBook.account.acctID)}" var="name"> 
+                    <b:panel>
+                        <h:inputHidden id="username" value="#{name}" />
+                        <h:graphicImage url="/image?id=#{name}" width="50px" height="50px" style="border-radius: 100px"/>
+                        <b:commandLink class="btn btn-md" value="#{name}" oncomplete="goToBottom()" >
+                            <f:ajax execute="@form" render=":chatHistory" listener="#{messageDao.retriveMessages(friendsBook.account.acctID, name)}" >
+                            </f:ajax>
+                        </b:commandLink>
+                    </b:panel>
+                </ui:repeat>
+                </h:form>
+            </b:column>
+            <b:column col-md="9">
+                <h:panelGroup id="chatHistory">
+                    <b:panel title="Chat History" collapsible="false">
+                        <div id="chat" style="overflow: auto; height: 400px; overflow-x: hidden">
+                            <ui:repeat value="#{messageDao.msgList}" var="msg">
+                                <b:row rendered="#{msg.sender.equals(friendsBook.account.acctID)}">
+                                    <div class="col-md-6"></div>
+                                    <b:panel dir="LTR" style="background-color: #3498db; color: #f5f6fa" col-md="6" >
+                                        <h:outputText value="#{msg.content}"></h:outputText>
+                                    </b:panel>
+                                </b:row>
+                                <b:row rendered="#{!msg.sender.equals(friendsBook.account.acctID)}">
+                                    <b:panel dir="LTR" style="background-color: #f5f6fa; color: #3498db" col-md="6">
+                                        <h:outputText value="#{msg.content}"></h:outputText>
+                                    </b:panel>
+                                </b:row>
+                            </ui:repeat>
+                        </div>
+                        <h:form id="messageForm">
+                            <b:inputText required="true" value="#{message.content}" placeholder="Type your message here..." />
+                            <b:commandButton value="Send" look="success" oncomplete="goToBottom()" action="#{message.emptyContent()}">
+                                <f:ajax execute="@form" render=":chatHistory @form" listener="#{messageDao.sendMessage(message.content,friendsBook.account.acctID,null)}" >
+                                </f:ajax>
+                            </b:commandButton>
+                        </h:form>
+                    </b:panel>
+                    
+                </h:panelGroup>
+            </b:column>
+        </b:container>
+    </h:body>
+</html>
